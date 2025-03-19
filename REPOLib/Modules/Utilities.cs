@@ -1,5 +1,7 @@
 using REPOLib.Extensions;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace REPOLib.Modules;
@@ -45,5 +47,11 @@ public static class Utilities
 
         prefab.FixAudioMixerGroups();
         _fixedPrefabs.Add(prefab);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static string GetCallingAssemblyName()
+    {
+        return Assembly.GetCallingAssembly().GetName().Name;
     }
 }

@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace REPOLib.Modules;
@@ -132,6 +134,11 @@ public static class Valuables
 
     public static void RegisterValuable(ValuableObject valuableObject, List<string> presetNames)
     {
+        RegisterValuable(valuableObject, presetNames, Utilities.GetCallingAssemblyName());
+    }
+
+    internal static void RegisterValuable(ValuableObject valuableObject, List<string> presetNames, string modName)
+    {
         if (valuableObject == null)
         {
             Logger.LogError($"Failed to register valuable. ValuableObject is null.");
@@ -169,7 +176,9 @@ public static class Valuables
             Logger.LogWarning($"Failed to register valuable \"{prefab.name}\". Valuable is already registered!");
             return;
         }
-
+        
+        ConfigManager.BindValuableConfig(modName, valuableObject, ref presetNames);
+        
         string prefabId = ResourcesHelper.GetValuablePrefabPath(valuableObject);
         NetworkPrefabs.RegisterNetworkPrefab(prefabId, prefab);
 

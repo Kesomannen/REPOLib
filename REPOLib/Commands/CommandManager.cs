@@ -119,7 +119,7 @@ public static class CommandManager
             string commandDescription = $"(Alias(es): [{string.Join(", ", aliases)}])" + "\n\n" + (execAttribute.Description ?? "Unknown");
             bool enabled = execAttribute.EnabledByDefault;
 
-            CommandsEnabled[commandName] = ConfigManager.ConfigFile.Bind("Commands."+sourceModGUID, commandName, defaultValue:enabled, commandDescription).Value;
+            CommandsEnabled[commandName] = ConfigManager.MainConfigFile.Bind("Commands."+sourceModGUID, commandName, defaultValue:enabled, commandDescription).Value;
         }
     }
 }
