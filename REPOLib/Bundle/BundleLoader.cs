@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using REPOLib.Bundle;
 using REPOLib.Modules;
 using REPOLib.Objects.Sdk;
 using System;
@@ -9,13 +10,14 @@ using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace REPOLib;
+namespace REPOLib; // for backwards compatibility
 
 public static class BundleLoader
 {
     public static event Action OnAllBundlesLoaded;
     
     private static readonly List<LoadOperation> _operations = [];
+    private static readonly List<string> _paths = [];
     
     public static void LoadAllBundles(string root, string withExtension)
     {
@@ -38,16 +40,19 @@ public static class BundleLoader
     {
         Logger.LogInfo($"Loading bundle at {relativePath}...", extended: true);
 
-        var start = DateTime.Now;
-        var request = AssetBundle.LoadFromFileAsync(path);
-        
-        var operation = new LoadOperation(start, request, relativePath);
-        _operations.Add(operation);
+        //var start = DateTime.Now;
+        //var request = AssetBundle.LoadFromFileAsync(path);
+        //
+        //var operation = new LoadOperation(start, request, relativePath);
+        _paths.Add(path);
     }
 
     internal static void FinishLoadOperations(MonoBehaviour behaviour)
     {
-        behaviour.StartCoroutine(FinishLoadOperationsRoutine(behaviour));
+        //behaviour.StartCoroutine(FinishLoadOperationsRoutine(behaviour));
+        var loader = behaviour.gameObject.AddComponent<AssetBundleLoader>();
+        loader.AddBatch(_paths);
+        loader.StartAllBatches();
     }
 
     private static IEnumerator FinishLoadOperationsRoutine(MonoBehaviour behaviour)
@@ -91,11 +96,11 @@ public static class BundleLoader
         Utilities.SafeInvokeEvent(OnAllBundlesLoaded);
     }
 
-    private static (TMP_Text, Action) SetupLoadingUI()
+    internal static (TMP_Text, Action) SetupLoadingUI()
     {
         var hudCanvas = GameObject.Find("HUD Canvas");
         var hud = hudCanvas.transform.Find("HUD");
-        hud.gameObject.SetActive(false);
+        //hud.gameObject.SetActive(false);
 
         var buttonText = Object.FindObjectOfType<TMP_Text>();
         var text = Object.Instantiate(buttonText, hudCanvas.transform);

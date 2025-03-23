@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="be9e7a10-fe1f-42f0-ad76-224f9ae44697" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/REPOLib/BundleLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/REPOLib/BundleLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REPOLib/Modules/Utilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/REPOLib/Modules/Utilities.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/REPOLib/Bundle/AssetBundleLoader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/REPOLib/Bundle/AsyncBundleLoadBatch.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.REPOLib/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.REPOLib/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REPOLib/BundleLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/REPOLib/Bundle/BundleLoader.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
