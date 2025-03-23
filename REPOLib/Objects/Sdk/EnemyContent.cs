@@ -14,6 +14,6 @@ public class EnemyContent : Content
 
     public override void Initialize(Mod mod)
     {
-        Modules.Enemies.RegisterEnemy(Setup);
+        Modules.Enemies.RegisterEnemy(Setup, mod);
     }
 }

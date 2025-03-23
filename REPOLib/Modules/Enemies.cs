@@ -1,6 +1,7 @@
 using REPOLib.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace REPOLib.Modules;
@@ -14,25 +15,25 @@ public static class Enemies
     private static readonly List<EnemySetup> _enemiesToRegister = [];
     private static readonly List<EnemySetup> _enemiesRegistered = [];
     
-    private static bool _initialEnemiesRegistered = true;
+    private static bool _initialEnemiesRegistered;
 
     internal static void RegisterInitialEnemies()
     {
-        if (!_initialEnemiesRegistered)
+        if (_initialEnemiesRegistered)
         {
             return;
         }
         
         foreach (var enemy in _enemiesToRegister)
         {
-            RegisterEnemyInternal(enemy);
+            RegisterEnemyWithGame(enemy);
         }
         
         _enemiesToRegister.Clear();
         _initialEnemiesRegistered = true;
     }
 
-    private static void RegisterEnemyInternal(EnemySetup enemy)
+    private static void RegisterEnemyWithGame(EnemySetup enemy)
     {
         if (_enemiesRegistered.Contains(enemy))
         {
@@ -55,7 +56,7 @@ public static class Enemies
         }
     }
 
-    public static void RegisterEnemy(EnemySetup enemySetup)
+    internal static void RegisterEnemy(EnemySetup enemySetup, IContentSource source)
     {
         if (enemySetup == null || enemySetup.spawnObjects == null || enemySetup.spawnObjects.Count == 0)
         {
@@ -110,12 +111,19 @@ public static class Enemies
 
         if (_initialEnemiesRegistered)
         {
-            RegisterEnemyInternal(enemySetup);
+            RegisterEnemyWithGame(enemySetup);
         }
         else
         {
             _enemiesToRegister.Add(enemySetup);
         }
+        
+        ContentRegistry.Add(enemySetup, source);
+    }
+
+    public static void RegisterEnemy(EnemySetup enemySetup)
+    {
+        RegisterEnemy(enemySetup, ContentRegistry.GetAssemblySource(Assembly.GetExecutingAssembly()));
     }
 
     public static void SpawnEnemy(EnemySetup enemySetup, Vector3 position, bool spawnDespawned = true)

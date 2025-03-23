@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace REPOLib.Modules;
@@ -102,15 +103,20 @@ public static class Valuables
     #region Public
     public static void RegisterValuable(GameObject prefab)
     {
-        RegisterValuable(prefab, new List<string>());
+        RegisterValuable(prefab, [], Assembly.GetCallingAssembly());
     }
 
     public static void RegisterValuable(GameObject prefab, List<LevelValuables> presets)
     {
-        RegisterValuable(prefab, (from preset in presets select preset.name).ToList());
+        RegisterValuable(prefab, (from preset in presets select preset.name).ToList(), Assembly.GetCallingAssembly());
     }
 
     public static void RegisterValuable(GameObject prefab, List<string> presetNames)
+    {
+        RegisterValuable(prefab, presetNames, Assembly.GetCallingAssembly());
+    }
+
+    internal static void RegisterValuable(GameObject prefab, List<string> presetNames, Assembly assembly)
     {
         if (prefab == null)
         {
@@ -124,20 +130,30 @@ public static class Valuables
             return;
         }
 
-        RegisterValuable(valuableObject, presetNames);
+        RegisterValuable(valuableObject, presetNames, assembly);
     }
 
     public static void RegisterValuable(ValuableObject valuableObject)
     {
-        RegisterValuable(valuableObject, new List<string>());
+        RegisterValuable(valuableObject, new List<string>(), Assembly.GetCallingAssembly());
     }
 
     public static void RegisterValuable(ValuableObject valuableObject, List<LevelValuables> presets)
     {
-        RegisterValuable(valuableObject, (from preset in presets select preset.name).ToList());
+        RegisterValuable(valuableObject, (from preset in presets select preset.name).ToList(), Assembly.GetCallingAssembly());
+    }
+    
+    public static void RegisterValuable(ValuableObject valuableObject, List<string> presetNames)
+    {
+        RegisterValuable(valuableObject, presetNames, Assembly.GetExecutingAssembly());
     }
 
-    public static void RegisterValuable(ValuableObject valuableObject, List<string> presetNames)
+    internal static void RegisterValuable(ValuableObject valuableObject, List<string> presetNames, Assembly assembly)
+    {
+        RegisterValuable(valuableObject, presetNames, ContentRegistry.GetAssemblySource(assembly));
+    }
+
+    internal static void RegisterValuable(ValuableObject valuableObject, List<string> presetNames, IContentSource source)
     {
         if (valuableObject == null)
         {
@@ -181,6 +197,8 @@ public static class Valuables
         {
             RegisterValuableInternal(valuableObject.gameObject);
         }
+        
+        ContentRegistry.Add(valuableObject, source);
     }
 
     public static ValuableObject SpawnValuable(ValuableObject valuableObject, Vector3 position, Quaternion rotation)

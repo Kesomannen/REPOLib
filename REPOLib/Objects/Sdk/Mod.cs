@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using REPOLib.Modules;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace REPOLib.Objects.Sdk;
 
 [CreateAssetMenu(menuName = "REPOLib/Mod", order = 0, fileName = "New Mod")]
-public class Mod : ScriptableObject
+public class Mod : ScriptableObject, IContentSource
 {
     [SerializeField]
     private string _name;
@@ -42,4 +43,6 @@ public class Mod : ScriptableObject
     public string FullName => $"{Author}-{Name}";
     // also known as a dependency string
     public string Identifier => $"{Author}-{Name}-{Version}";
+    
+    string IContentSource.Guid => FullName;
 }

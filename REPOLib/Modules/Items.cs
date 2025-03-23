@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace REPOLib.Modules;
 
@@ -27,13 +28,13 @@ public static class Items
 
         foreach (var item in _itemsToRegister)
         {
-            RegisterItemInternal(item);
+            RegisterItemWithGame(item);
         }
         
         _initialItemsRegistered = true;
     }
 
-    private static void RegisterItemInternal(Item item)
+    private static void RegisterItemWithGame(Item item)
     {
         Utilities.FixAudioMixerGroups(item.prefab);
         
@@ -52,7 +53,7 @@ public static class Items
         }
     }
 
-    public static void RegisterItem(Item item)
+    internal static void RegisterItem(Item item, IContentSource source)
     {
         if (item == null)
         {
@@ -96,7 +97,14 @@ public static class Items
         
         if (_initialItemsRegistered)
         { 
-            RegisterItemInternal(item);   
+            RegisterItemWithGame(item);   
         }
+        
+        ContentRegistry.Add(item, source);
+    }
+
+    public static void RegisterItem(Item item)
+    {
+        RegisterItem(item, ContentRegistry.GetAssemblySource(Assembly.GetExecutingAssembly()));
     }
 }
