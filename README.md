@@ -302,15 +302,15 @@ using UnityEngine;
 var source = ContentRegistry.GetSource("DiscipleShadow-Pokeball_Valuables");
 if (source == null)
 {
-    Debug.Error("Content source not found!");
+    Debug.LogError("Content source not found!");
     return;
 }
 
 foreach (Object content in ContentRegistry.GetAllFrom(source))
 {
-    if (content is ValuableObject) Debug.Log("Valuable")
-    else if (content is Item) Debug.Log("Item")
-    else if (content is EnemySetup) Debug.Log("Enemy")
+    if (content is ValuableObject) Debug.Log("Valuable");
+    else if (content is Item) Debug.Log("Item");
+    else if (content is EnemySetup) Debug.Log("Enemy");
     else Debug.Log("Unknown");
 }
 ```
